@@ -400,7 +400,7 @@ function _depends() {
                      libnet-ssleay-perl ca-certificates-java libxslt1-dev \
                      libxslt1.1 libxml2 libffi-dev python-pip python-dev libhtml-parser-perl libxml-libxml-perl \
                      libjson-perl libjson-xs-perl libxml-libxslt-perl libapache2-mod-scgi \
-                     vnstat vnstati openvpn transmission-daemon >>"${OUTTO}" 2>&1
+                     vnstat vnstati openvpn >>"${OUTTO}" 2>&1
   elif [[ $DISTRO == Ubuntu ]]; then
     apt-get -y -f --allow-unauthenticated install build-essential debian-archive-keyring fail2ban bc sudo \
                      screen zip irssi unzip nano bwm-ng htop iotop git \
@@ -416,7 +416,7 @@ function _depends() {
                      libnet-ssleay-perl openjdk-8-jre-headless openjdk-8-jre openjdk-8-jdk libxslt1-dev \
                      libxslt1.1 libxml2 libffi-dev python-pip python-dev libhtml-parser-perl libxml-libxml-perl \
                      libjson-perl libjson-xs-perl libxml-libxslt-perl libapache2-mod-scgi \
-                     vnstat vnstati openvpn transmission-daemon >>"${OUTTO}" 2>&1
+                     vnstat vnstati openvpn >>"${OUTTO}" 2>&1
   fi
 }
 
@@ -689,6 +689,21 @@ fi
   chown ${username}: /home/${username}/torrents/deluge
   touch /install/.deluge.lock
 fi
+}
+
+function _insTr() {
+  apt-get -q -y update >>"${OUTTO}" 2>&1
+  apt-get -q -y install transmission-daemon >>"${OUTTO}" 2>&1
+  service transmission-daemon stop
+  useradd -m transmission
+  passwd -d transmission
+  mkdir -p /srv/rutorrent/home/${username}.rtorrent.downloads
+  chmod g+w /srv/rutorrent/home/${username}.rtorrent.downloads
+  sed -i "s/\/var\/lib\/transmission-daemon\/Downloads/\/srv\/rutorrent\/home\/${username}.rtorrent.downloads/g" /etc/transmission-daemon/settings.json
+  sed -i "s/\"{.*/\"${passwd}\", /g" /etc/transmission-daemon/settings.json
+  sed -i "s/\"transmission\",/\"${username}\",/g" /etc/transmission-daemon/settings.json
+  sed -i "s/127.0.0.1/\*.\*.\*.\*/g" /etc/transmission-daemon/settings.json
+  service transmission-daemon start
 }
 
 function _insTrWeb() {
@@ -1247,6 +1262,7 @@ echo -n "Installing rtorrent-${green}$RTVERSION${normal} ... ";_rtorrent & spinn
 echo -n "Installing rutorrent into /srv ... ";_rutorrent & spinner $!;echo
 echo -n "Installing rutorrent plugins ... ";_rutorrent-plugins & spinner $!;echo
 echo -n "Installing deluge ... ";_deluge & spinner $!;echo
+echo -n "Configuring Transmisson ... ";_insTr & spinner $!;echo
 echo -n "Installing Transmisson Web Control ... ";_insTrWeb & spinner $!;echo
 echo -n "Installing mktorrent from source ... ";_mktorrent & spinner $!;echo
 echo -n "Installing quickbox dashboard ... ";_dashboard & spinner $!;echo
