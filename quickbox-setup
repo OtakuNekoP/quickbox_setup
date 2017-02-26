@@ -699,7 +699,8 @@ function _insTr() {
   passwd -d transmission
   mkdir -p /srv/rutorrent/home/${username}.transmission.downloads
   chmod g+w /srv/rutorrent/home/${username}.transmission.downloads
-  sed -i "s/\/var\/lib\/transmission-daemon\/Downloads/\/srv\/rutorrent\/home\/${username}.transmission.downloads/g" /etc/transmission-daemon/settings.json
+  sed -i "s/\/var\/lib\/transmission-daemon\/downloads/\/srv\/rutorrent\/home\/${username}.transmission.downloads/g" /etc/transmission-daemon/settings.json
+  sed -i "s/\/var\/lib\/transmission-daemon\/Downloads/\/srv\/rutorrent\/home\/${username}.transmission.downloads\/incomplete/g" /etc/transmission-daemon/settings.json
   sed -i "s/\"{.*/\"${passwd}\", /g" /etc/transmission-daemon/settings.json
   sed -i "s/\"transmission\",/\"${username}\",/g" /etc/transmission-daemon/settings.json
   sed -i "s/127.0.0.1/\*.\*.\*.\*/g" /etc/transmission-daemon/settings.json
