@@ -695,10 +695,9 @@ function _insTr() {
   apt-get -q -y update >>"${OUTTO}" 2>&1
   apt-get -q -y install transmission-daemon >>"${OUTTO}" 2>&1
   service transmission-daemon stop
-  useradd -m transmission
-  passwd -d transmission
   mkdir -p /home/${username}/torrents/transmission
   chmod g+w /home/${username}/torrents/transmission
+  chgrp -R debian-transmission /home/${username}/torrents/transmission
   sed -i "s/\/var\/lib\/transmission-daemon\/downloads/\/home\/${username}\/torrents\/transmission/g" /etc/transmission-daemon/settings.json
   sed -i "s/\/var\/lib\/transmission-daemon\/Downloads/\/home\/${username}\/torrents\/transmission\/incomplete/g" /etc/transmission-daemon/settings.json
   sed -i "s/\"{.*/\"${passwd}\", /g" /etc/transmission-daemon/settings.json
