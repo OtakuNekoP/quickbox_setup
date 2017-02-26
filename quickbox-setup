@@ -697,9 +697,9 @@ function _insTr() {
   service transmission-daemon stop
   useradd -m transmission
   passwd -d transmission
-  mkdir -p /srv/rutorrent/home/${username}.rtorrent.downloads
-  chmod g+w /srv/rutorrent/home/${username}.rtorrent.downloads
-  sed -i "s/\/var\/lib\/transmission-daemon\/Downloads/\/srv\/rutorrent\/home\/${username}.rtorrent.downloads/g" /etc/transmission-daemon/settings.json
+  mkdir -p /srv/rutorrent/home/${username}.transmission.downloads
+  chmod g+w /srv/rutorrent/home/${username}.transmission.downloads
+  sed -i "s/\/var\/lib\/transmission-daemon\/Downloads/\/srv\/rutorrent\/home\/${username}.transmission.downloads/g" /etc/transmission-daemon/settings.json
   sed -i "s/\"{.*/\"${passwd}\", /g" /etc/transmission-daemon/settings.json
   sed -i "s/\"transmission\",/\"${username}\",/g" /etc/transmission-daemon/settings.json
   sed -i "s/127.0.0.1/\*.\*.\*.\*/g" /etc/transmission-daemon/settings.json
@@ -807,6 +807,7 @@ function _fileindexer() {
   echo "DirectoryIndex index.html index.php /_h5ai/public/index.php" >> /etc/apache2/apache2.conf
   ln -s /home/${username}/torrents/rtorrent/ ${username}.rtorrent.downloads
   ln -s /home/${username}/torrents/deluge/ ${username}.deluge.downloads
+  ln -s /home/${username}/torrents/transmission/ ${username}.transmission.downloads
 }
 
 # function to configure apache (24)
