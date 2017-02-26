@@ -697,7 +697,8 @@ function _insTr() {
   service transmission-daemon stop
   mkdir -p /home/${username}/torrents/transmission
   chmod g+w /home/${username}/torrents/transmission
-  chgrp -R debian-transmission /home/${username}/torrents/transmission
+#chgrp -R debian-transmission /home/${username}/torrents/transmission
+  chown -R ${username}:debian-transmission /home/${username}/torrents/transmission
   sed -i "s/\/var\/lib\/transmission-daemon\/downloads/\/home\/${username}\/torrents\/transmission/g" /etc/transmission-daemon/settings.json
   sed -i "s/\/var\/lib\/transmission-daemon\/Downloads/\/home\/${username}\/torrents\/transmission\/incomplete/g" /etc/transmission-daemon/settings.json
   sed -i "s/\"{.*/\"${passwd}\", /g" /etc/transmission-daemon/settings.json
